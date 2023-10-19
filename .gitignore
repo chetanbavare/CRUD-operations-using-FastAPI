@@ -1,0 +1,5 @@
+#these files will be ignored when uploaded in git 
+
+_pycache_
+venv
+.env
