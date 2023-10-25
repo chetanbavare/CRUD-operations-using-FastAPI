@@ -1,0 +1,45 @@
+version: '3'
+services:
+  api:
+    build: .
+    depends_on:
+      - postgres #this will start the postgres container before the api container
+    ports:
+      - 8000:8000
+      #this will redirect all the requests on port 8000(left) to 8000(right) , the right side port is already mentioned in docker file for cmd command
+    # volumes:
+    #   - ./:/usr/src/app:ro # ro is read only , binding everytime code is changed
+    # command: uvicorn app.main:app --reload
+    environment:
+      - DATABASE_HOSTNAME = localhost # from postgres image
+      - DATABASE_PORT = 5432
+      - DATABASE_USERNAME = postgres
+      - DATABASE_PASSWORD = chetanbavare
+      - DATABASE_NAME = fastapi
+      - SECRET_KEY = 09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7
+      - ALGORITHM = HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES = 30
+
+      #or
+    # env_file:
+    #   - ./.env
+  
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=chetanbavare
+      - POSTGRES_DB = fastapi
+
+    volumes:
+      - postgres-db:/var/lib/postgresql/data
+      #data is saved from locahost to local machine in this directory
+
+volumes:
+    postgres-db:
+
+
+
+
+      #docker-compose up -d, this will rebuild image since the build config
+      #docker-compose down used to tear down the image, diconnecting it
+      #docker-compose up --build used to rebuild already existing image after an image has changd since last time 

@@ -25,6 +25,7 @@ router = APIRouter(
 # now we are using new schema which holds two ids post(which further contains the regular ids) and vote
 # @router.get("/") # list[post] needs to be used here as we are fetching more than one posts
 def test_posts(db: Session = Depends(get_db), current_user : int = Depends(current_user) , Limit:int = 30, skip:int = 0, search : Optional[str] = ""):
+# def test_posts(db: Session = Depends(get_db), Limit:int = 30, skip:int = 0, search : Optional[str] = ""):
     # limit is a key that handles no of results in a query ,here max is 10 ex. ?limit = 3 
     # skip to skip over some results 
     # for search , we are using optional i.e it either has str or nothing, ex. search = ayush%20added , %20 is speacial cahacter for space
@@ -38,14 +39,14 @@ def test_posts(db: Session = Depends(get_db), current_user : int = Depends(curre
     # print(search)
     # print(models.Post.title.contains(search)) 
 
-    posts = db.query(models.Post.id).filter(models.Post.title.contains(search)).limit(Limit).offset(skip).all() # this is same as select * from posts where user.id = post.owner_id
+    # posts = db.query(models.Post.id).filter(models.Post.title.contains(search)).limit(Limit).offset(skip).all() # this is same as select * from posts where user.id = post.owner_id
   
     results = db.query(models.Post, func.count(models.Vote.post_id).label("votes")).join(models.Vote,models.Post.id == models.Vote.post_id, isouter=True).group_by(models.Post.id).filter(models.Post.title.contains(search)).limit(Limit).offset(skip)
     #this is the same as select posts.*, count(votes.post_id) from posts left join votes on posts.id = votes.post_id group by posts.id
     # without .all() this is just a query waiting to be executed
-    print(results)
+   
     return [{"post": result[0], "votes": result[1]} for result in results] 
-
+# 
 # for result in results: This is a list comprehension that iterates over each element (result) in the results list.
 # {"post": result[0], "votes": result[1]}: For each result, this creates a new dictionary. The dictionary has two key-value pairs:
 # "post": result[0]: This assigns the first element (result[0]) of the result list to the key "post".
@@ -82,6 +83,7 @@ def get_post(id:int, db:Session = Depends(get_db), current_user : int = Depends(
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=Post) # response model is used to return data respective to the Post schema (excluding columns that arent present) this is a pydantic model example
 def create_posts(post: PostCreate, db:Session=Depends(get_db),  current_user : int = Depends(current_user)): # current_user handles the authentication , current_user is a function from oath2
+# def create_posts(post: PostCreate, db:Session=Depends(get_db)): # current_user handles the authentication , current_user is a function from oath2
     # the above post:PostCreate is the input schema
     #response_model is the output schema, that will be returned in postman
     #post_dict = post.model_dump()
@@ -101,6 +103,7 @@ def create_posts(post: PostCreate, db:Session=Depends(get_db),  current_user : i
     print(current_user.email) # this is returning the object user from function in oauth2 py
     print(current_user.id) # we will add this in the next line to automatically get the id of user that has logged in and add it as owner_id
     new_post = models.Post(owner_id = current_user.id, **post.model_dump()) # schema to dictionary and then unpacked into the model using **
+    # new_post = models.Post(**post.model_dump()) # schema to dictionary and then unpacked into the model using **
     db.add(new_post) # to add newly added row
     db.commit() # commit
     db.refresh(new_post) # for returning *

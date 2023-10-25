@@ -27,6 +27,7 @@ router =APIRouter(
 def voted(vote:Vote, current_user : int = Depends(current_user), db:Session = Depends(get_db)):
     
     post_exists = db.query(models.Post).filter(models.Post.id == vote.post_id).first()
+    print(post_exists)
     if not post_exists:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with id {vote.post_id} not found")
     

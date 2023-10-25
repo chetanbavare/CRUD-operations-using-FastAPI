@@ -6,7 +6,7 @@ from .routers import post, user, auth, vote
 from fastapi.middleware.cors import CORSMiddleware
 
 # models.Base.metadata.create_all(bind=engine) 
-#connecting sqlalchemy into the main.py
+# for creating models through sqlalchemy now we are using alembics
 
 app = FastAPI() 
 #initiating fastapi using api variable
@@ -27,7 +27,7 @@ app.add_middleware(
 )
 @app.get("/")
 def root():
-    return {'message': 'hello'}
+    return {'message': 'hello iam chetan'}
 
 app.include_router(post.router) 
 app.include_router(user.router) 

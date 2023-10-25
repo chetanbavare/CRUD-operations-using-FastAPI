@@ -17,13 +17,15 @@ class CreateUser(BaseModel): # schema that will be shown when returned
     id: int
     email:EmailStr
     created_at: datetime
+    phone_num: str
+    
 
 class Post(PostBase): # used as output schema
     id:int
     # title:str, we will inherit these
     # content:str
     # published: bool
-    create_at: datetime # datetime datatype need to import though
+    created_at: datetime # datetime datatype need to import though
     # class Config:
     #     orm_mode= True , this was used to convert sqlalchemy to dict before
     owner_id: int
@@ -36,6 +38,8 @@ class PostNew(BaseModel):
 class User(BaseModel): # actual schema that controls the data inputed
     email : EmailStr
     password: str
+    phone_num:str
+    
 
 class LoginUser(BaseModel):
     email:EmailStr
