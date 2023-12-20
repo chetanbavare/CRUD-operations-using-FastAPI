@@ -48,8 +48,14 @@ alembic upgrade head
 pytest
 
 ## Screenshots
+- FASTAPI Docs
+  
 ![Docs](screenshots/fastapi_docs.png)
+- Schemas
+ 
 ![Schemas](screenshots/schemas.png)
+- Postman
+ 
 ![Postman](screenshots/postman.png)
 
 
