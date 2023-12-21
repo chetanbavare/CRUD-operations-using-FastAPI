@@ -47,7 +47,7 @@ alembic upgrade head
 ## Testing
 pytest
 
-## Screenshots
+## Visuals
 - FASTAPI Docs
   
 ![Docs](screenshots/fastapi_docs.png)
